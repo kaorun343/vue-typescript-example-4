@@ -9,9 +9,10 @@ import { Message } from '../domain/model/Message/Message'
   filters: {
     format: (n: number) => new Date(n).toLocaleString(),
   },
+
   beforeRouteEnter(_f, _t, next) {
     next(async vm => {
-      vm.messages = await vm.repository.getAll()
+      vm.messages = (await vm.repository.getAll()).reverse()
     })
   },
 })
@@ -42,6 +43,6 @@ export class HomeComponent extends Vue {
   }
 
   async mounted() {
-    this.messages = await this.repository.getAll()
+    this.messages = (await this.repository.getAll()).reverse()
   }
 }
