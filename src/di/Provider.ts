@@ -2,28 +2,38 @@ import { get } from './container'
 import { Constructor, Key } from './types'
 
 export class Provider {
-  private data = new Map<Key, Constructor>()
+  private constructors = new Map<Key, Constructor>()
+  private objects = new Map<Key, object>()
 
-  bind(key: Key, Constructor: Constructor) {
-    this.data.set(key, Constructor)
+  bindConstructor(key: Key, Constructor: Constructor) {
+    this.constructors.set(key, Constructor)
+  }
+
+  bindObject(key: Key, object: object) {
+    this.objects.set(key, object)
   }
 
   /**
    * provide dictionary of objects
    */
   provide(): Record<Key, any> {
-    const generated = new Map<Key, Constructor>()
+    const generated = new Map<Key, object>(this.objects)
 
-    return Array.from(this.data).reduce((acc, [key]) => {
+    const initialDictionary = [...this.objects].reduce(
+      (acc, [key, object]) => ({ ...acc, [key]: object }),
+      Object.create(null) as Record<Key, object>,
+    )
+
+    return [...this.constructors].reduce((acc, [key]) => {
       return { ...acc, [key]: this.instanciate(key, generated) }
-    }, Object.create(null))
+    }, initialDictionary)
   }
 
-  private instanciate(key: Key, generated: Map<Key, Constructor>): Object {
+  private instanciate(key: Key, generated: Map<Key, object>): Object {
     const generatedInstance = generated.get(key)
     if (generatedInstance) return generatedInstance
 
-    const Constructor = this.data.get(key)
+    const Constructor = this.constructors.get(key)
 
     if (!Constructor) {
       throw new Error(`DI: ${key.toString()} is not registered!!`)
@@ -33,6 +43,7 @@ export class Provider {
 
     const args = injects.map(inject => this.instanciate(inject.key, generated))
 
+    // instanciate
     return new Constructor(...args)
   }
 }

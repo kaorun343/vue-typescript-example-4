@@ -8,7 +8,7 @@ describe('Provider', () => {
     resetContainer()
   })
 
-  it('should provide', () => {
+  it('should accept Constructors', () => {
     const APPLE = 'APPLE'
     const BANANA = Symbol('BANANA')
     const SERVICE = Symbol('SERVICE')
@@ -29,9 +29,9 @@ describe('Provider', () => {
 
     const provider = new Provider()
 
-    provider.bind(APPLE, Apple)
-    provider.bind(BANANA, Banana)
-    provider.bind(SERVICE, Service)
+    provider.bindConstructor(APPLE, Apple)
+    provider.bindConstructor(BANANA, Banana)
+    provider.bindConstructor(SERVICE, Service)
 
     const provide = provider.provide() as any
 
@@ -42,5 +42,36 @@ describe('Provider', () => {
     expect(service instanceof Service).toBe(true)
     expect(service.apple instanceof Apple).toBe(true)
     expect(service.banana instanceof Banana).toBe(true)
+  })
+
+  it('should accept objects', () => {
+    const APPLE = 'APPLE'
+    const SERVICE = Symbol('SERVICE')
+
+    interface Apple {
+      say(): void
+    }
+
+    const apple: Apple = {
+      say() {},
+    }
+
+    @Injectable()
+    class Service {
+      constructor(@Inject(APPLE) public apple: Apple) {}
+    }
+
+    const provider = new Provider()
+
+    provider.bindConstructor(SERVICE, Service)
+    provider.bindObject(APPLE, apple)
+
+    const provide = provider.provide() as any
+
+    expect(typeof provide[APPLE] === 'object').toBe(true)
+    expect(typeof provide[APPLE].say === 'function').toBe(true)
+
+    const service: Service = provide[SERVICE]
+    expect(typeof service.apple === 'object').toBe(true)
   })
 })
