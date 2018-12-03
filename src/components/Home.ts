@@ -43,6 +43,10 @@ export class HomeComponent extends Vue {
   }
 
   async mounted() {
+    this.initMessages()
+  }
+
+  async initMessages() {
     this.messages = (await this.repository.getAll()).reverse()
   }
 }
