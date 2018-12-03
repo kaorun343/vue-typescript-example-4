@@ -26,4 +26,8 @@ export class InMemoryMessageRepository implements MessageRepository {
   async getAll() {
     return Array.from(this.items.values())
   }
+
+  async removeAll() {
+    this.items.clear()
+  }
 }

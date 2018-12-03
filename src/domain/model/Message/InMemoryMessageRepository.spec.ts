@@ -51,4 +51,19 @@ describe('InMemoryMessageRepository', () => {
       expect(messages.length).toBe(2)
     })
   })
+
+  describe('#removeAll', () => {
+    it('should remove all items', async () => {
+      const repository = new InMemoryMessageRepository(
+        initMessage('Apple', 'apple apple', 1),
+        initMessage('Banana', 'banana banana', 2),
+      )
+
+      await repository.removeAll()
+
+      const messages = await repository.getAll()
+
+      expect(messages.length).toBe(0)
+    })
+  })
 })
