@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "webpack-cli --mode='production' --env.production --progress",
+    "serve": "webpack-dev-server --mode='development'",
     "test": "jest"
   },
   "keywords": [],
@@ -11,9 +13,21 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.3.9",
+    "css-loader": "^1.0.1",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^23.6.0",
+    "mini-css-extract-plugin": "^0.4.5",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0",
     "ts-jest": "^23.10.5",
-    "typescript": "^3.1.6"
+    "ts-loader": "^5.3.1",
+    "typescript": "^3.1.6",
+    "vue-loader": "^15.4.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   },
   "jest": {
     "transform": {
@@ -28,5 +42,11 @@
       "json",
       "node"
     ]
+  },
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "vue": "^2.5.17",
+    "vue-property-decorator": "^7.2.0",
+    "vue-router": "^3.0.2"
   }
 }
